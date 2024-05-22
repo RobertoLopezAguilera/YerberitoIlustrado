@@ -28,7 +28,6 @@ pedir_input(Prompt, Label, Input) :-
     RawInput \== @nil,
     Input = RawInput.
 
-
 % lista de Plantas.
 iman('arnica','C:/Proyecto/yerberito/arnica.jpeg').
 iman('borraja','C:/Proyecto/yerberito/borraja.jpeg').
@@ -85,29 +84,36 @@ mostrar_sintoma_info(Sintoma) :-
     send(Dialog, open_centered).
 
 % Predicado para mostrar información sobre una enfermedad
-mostrar_enfermedad(enfermedad) :-
-    new(Dialog, dialog('Informacion sobre enfermedad')),
-    send(Dialog, size, size(650, 450)),
-    send(Dialog, colour, colour(white)),
-    send(Dialog, append, new(Text, text('Enfermedad:', left, normal))),
-    send(Dialog, append, new(@lb, list_browser)),
-    send(@lb, append, ''),
-    findall(Planta, trata_enfermedad(Planta, enfermedad), Plantas),
-    forall(member(Planta, Plantas),
-           send(@lb, append, Planta)),
-    send(Dialog, append, @lb),
+mostrar_enfermedad(Enfermedad) :-
+    new(Dialog, dialog('Información sobre la Enfermedad')),
+    send(Dialog, size, size(600, 500)),
+    send(Dialog, append, label(nombre, 'Enfermedad:')),
+    send(Dialog, append, text_item(Enfermedad, Enfermedad, @default)),
+    send(Dialog, append, label(explicacion, 'Descripción:')),
+    descripcion_enfermedad(Enfermedad, Descripcion),
+    send(Dialog, append, text_item(Descripcion, Descripcion, @default)),
+    send(Dialog, open_centered).
     
+mostrar_diccionario(Palabra) :-
+    new(Dialog, dialog('Informacion sobre la Palabra')),
+    send(Dialog, size, size(600, 500)),
+    send(Dialog, append, label(nombre, 'Palabra:')),
+    send(Dialog, append, text(Palabra)),
+    send(Dialog, append, label(explicacion, 'Explicacion:')),
+    explicacion(Palabra, Explicacion),
+    send(Dialog, append, text(Explicacion)),
     send(Dialog, open_centered).
 
 % Predicado para iniciar la interfaz
 start :-
     new(D, dialog('Conocimientos sobre plantas medicinales')),
-    send(D, size, size(400, 600)),
+    send(D, size, size(600, 600)),
     send(D, colour, colour(red)),
     send(D, append, new(Menu, menu_bar)),
     send(Menu, append, new(PlantaMenu, popup('Buscar planta'))),
     send(Menu, append, new(SintomaMenu, popup('Buscar sintoma'))),
     send(Menu, append, new(EnfermedadMenu, popup('Buscar enfermedad'))),
+    send(Menu, append, new(PalabrasClave, popup('Palabras clave'))),
     % Opciones para buscar por planta
     send(PlantaMenu, append, menu_item(arnica, message(@prolog, mostrar_planta_info, arnica))),
     send(PlantaMenu, append, menu_item(borraja, message(@prolog, mostrar_planta_info, borraja))),
@@ -147,6 +153,35 @@ start :-
     send(EnfermedadMenu, append, menu_item(gonorrea, message(@prolog, mostrar_enfermedad, gonorrea))),
     send(EnfermedadMenu, append, menu_item(reumatismos, message(@prolog, mostrar_enfermedad, reumatismos))),
     send(EnfermedadMenu, append, menu_item(tuberculosis, message(@prolog, mostrar_enfermedad, tuberculosis))),
+
+    % Opciones para palabras clave
+    send(PalabrasClave, append, menu_item(afrodisiaca, message(@prolog, mostrar_diccionario, afrodisiaca))),
+    send(PalabrasClave, append, menu_item(analgesica, message(@prolog, mostrar_diccionario, afrodisiaca))),
+    send(PalabrasClave, append, menu_item(antidiarreica, message(@prolog, mostrar_diccionario, antidiarreica))),
+    send(PalabrasClave, append, menu_item(antiespasmodica, message(@prolog, mostrar_diccionario, antiespasmodica))),
+    send(PalabrasClave, append, menu_item(antiflogistica, message(@prolog, mostrar_diccionario, antiflogistica))),
+    send(PalabrasClave, append, menu_item(antipiretica, message(@prolog, mostrar_diccionario, antipiretica))),
+    send(PalabrasClave, append, menu_item(antiseptica, message(@prolog, mostrar_diccionario, antiseptica))),
+    send(PalabrasClave, append, menu_item(aperitiva, message(@prolog, mostrar_diccionario, aperitiva))),
+    send(PalabrasClave, append, menu_item(astrigente, message(@prolog, mostrar_diccionario, astrigente))),
+    send(PalabrasClave, append, menu_item(carminativa, message(@prolog, mostrar_diccionario, carminativa))),
+    send(PalabrasClave, append, menu_item(colagoga, message(@prolog, mostrar_diccionario, colagoga))),
+    send(PalabrasClave, append, menu_item(depurativa, message(@prolog, mostrar_diccionario, depurativa))),
+    send(PalabrasClave, append, menu_item(diaforetica, message(@prolog, mostrar_diccionario, diaforetica))),
+    send(PalabrasClave, append, menu_item(digestiva, message(@prolog, mostrar_diccionario, digestiva))),
+    send(PalabrasClave, append, menu_item(diuretica, message(@prolog, mostrar_diccionario, diuretica))),
+    send(PalabrasClave, append, menu_item(emetina, message(@prolog, mostrar_diccionario, emetina))),
+    send(PalabrasClave, append, menu_item(emenagoga, message(@prolog, mostrar_diccionario, emenagoga))),
+    send(PalabrasClave, append, menu_item(estupefaciente, message(@prolog, mostrar_diccionario, estupefaciente))),
+    send(PalabrasClave, append, menu_item(expectorante, message(@prolog, mostrar_diccionario, expectorante))),
+    send(PalabrasClave, append, menu_item(hemostatica, message(@prolog, mostrar_diccionario, hemostatica))),
+    send(PalabrasClave, append, menu_item(hepatica, message(@prolog, mostrar_diccionario, hepatica))),
+    send(PalabrasClave, append, menu_item(laxante, message(@prolog, mostrar_diccionario, laxante))),
+    send(PalabrasClave, append, menu_item(pectoral, message(@prolog, mostrar_diccionario, pectoral))),
+    send(PalabrasClave, append, menu_item(sedante, message(@prolog, mostrar_diccionario, sedante))),
+    send(PalabrasClave, append, menu_item(vermifuga, message(@prolog, mostrar_diccionario, vermifuga))),
+    send(PalabrasClave, append, menu_item(vulnerario, message(@prolog, mostrar_diccionario, vulnerario))),
+
     % Mostrar imagen de fondo y abrir la interfaz
     mostrar('C:/Proyecto/yerberito/portada.jpeg', D, Menu),
     send(D, open, point(0, 0)).
@@ -228,7 +263,6 @@ consumo(tripa_judas,toma_extracto_de_la_hierba).
 nombre_cientifico(tripa_judas,vitis_tilichea).
 
 % Uso terapéutico de las plantas medicinales
-
 uso_terapeutico(arnica, pomada).
 uso_terapeutico(borraja, infusion).
 uso_terapeutico(cempasuchil, infusion).
@@ -240,7 +274,6 @@ uso_terapeutico(marihuana, consumo).
 uso_terapeutico(tripa_judas, cocina).
 
 % Efectos secundarios y precauciones
-
 efecto_secundario(arnica, ninguna).
 efecto_secundario(borraja, ninguna).
 efecto_secundario(cempasuchil, ninguna).
@@ -289,3 +322,103 @@ sintoma_de(carminativa, problemas_digestivos).
 sintoma_de(estimulante, fatiga_mental).
 sintoma_de(estimulante_apetito, perdida_apetito).
 
+% medicamentos echos por plantas
+
+medicamentos(tonico_Cardiaco,digital).
+medicamentos(morfina,opio).
+medicamentos(codeina,opio).
+medicamentos(emetina,ipeca).
+medicamentos(estrienina,nuex_vonica).
+medicamentos(veratina,eleboro_blanco).
+medicamentos(colquicina,colchico).
+medicamentos(quinina,quina).
+medicamentos(teobromina,cacao).
+medicamentos(esparteina,retama).
+medicamentos(cocaina,coca).
+medicamentos(mescalina,peyote).
+medicamentos(epedrina,epedra).
+medicamentos(hormonas,barbasco).
+medicamentos(lutennrina,nenufar).
+medicamentos(diosponina,name).
+medicamentos(tauremiswa,artemisa).
+medicamentos(acido_lisergico,toloache).
+medicamentos(vitaminca_C,rosal).
+medicamentos(quercitrina,rosal).
+medicamentos(eucaliptol,eucalipto).
+
+echo(tonico_Cardiaco,digital).
+echo(morfina,opio).
+echo(codeina,opio).
+echo(emetina,ipeca).
+echo(estrienina,nuex_vonica).
+echo(veratina,eleboro_blanco).
+echo(colquicina,colchico).
+echo(quinina,quina).
+echo(teobromina,cacao).
+echo(esparteina,retama).
+echo(cocaina,coca).
+echo(mescalina,peyote).
+echo(epedrina,epedra).
+echo(hormonas,barbasco).
+echo(lutennrina,nenufar).
+echo(diosponina,name).
+echo(tauremiswa,artemisa).
+echo(acido_lisergico,toloache).
+echo(vitaminca_C,rosal).
+echo(quercitrina,rosal).
+echo(eucaliptol,eucalipto).
+
+% Diccionario
+palabra(afrodisiaca).
+palabra(analgesica).
+palabra(antidiarreica).
+palabra(antiespasmodica).
+palabra(antiflogistica).
+palabra(antipiretica).
+palabra(antiseptica).
+palabra(aperitiva).
+palabra(astrigente).
+palabra(carminativa).
+palabra(colagoga).
+palabra(depurativa).
+palabra(diaforetica).
+palabra(digestiva).
+palabra(diuretica).
+palabra(emetina).
+palabra(emenagoga).
+palabra(estupefaciente).
+palabra(expectorante).
+palabra(hemostatica).
+palabra(hepatica).
+palabra(laxante).
+palabra(pectoral).
+palabra(sedante).
+palabra(vermifuga).
+palabra(vulnerario).
+
+explicacion(afrodisiaca, 'Excita el apetito sexual').
+explicacion(analgesica, 'Quita o modera el dolor').
+explicacion(antidiarreica, 'Insensibiliza el cuerpo').
+explicacion(antiespasmodica, 'Controla espasmos nerviosos').
+explicacion(antiflogistica, 'Actúa contra inflamaciones').
+explicacion(antipiretica, 'Quita o disminuye la fiebre').
+explicacion(antiseptica, 'Mata los tejidos').
+explicacion(aperitiva, 'Produce apetito').
+explicacion(astrigente, 'Hace contraer los tejidos').
+explicacion(carminativa, 'Evita la formación de gases').
+explicacion(colagoga, 'Facilita la evacuación de la bilis').
+explicacion(depurativa, 'Purifica el organismo').
+explicacion(diaforetica, 'Provoca sudoración').
+explicacion(digestiva, 'Favorece la digestión').
+explicacion(diuretica, 'Aumenta la secreción de orina').
+explicacion(emetina, 'Induce al vómito').
+explicacion(emenagoga, 'Estimula el flujo menstrual').
+explicacion(estupefaciente, 'Induce a un estado de somnolencia').
+explicacion(expectorante, 'Facilita la expulsión de las flemas').
+explicacion(hemostatica, 'Detiene hemorragias').
+explicacion(hepatica, 'Beneficia al hígado').
+explicacion(laxante, 'Facilita la evacuación intestinal').
+explicacion(pectoral, 'Alivia afecciones del pecho').
+explicacion(sedante, 'Calma el sistema nervioso').
+explicacion(vermifuga, 'Expulsa los parásitos intestinales').
+explicacion(vulnerario, 'Cura heridas y llagas').
